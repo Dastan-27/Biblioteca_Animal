@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Animal</title>
+    <link rel="stylesheet" href="/styles/Home.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐾 Biblioteca Animal</h1>
+            <p>Descubre y explora nuestra increíble colección de animales</p>
+        </div>
+
+        <div class="actions-bar">
+            <div class="left-actions">
+                <a href="/animales/nuevo" class="btn btn-primary">
+                    <span>➕</span> Agregar Nuevo Animal
+                </a>
+                <a href="/estadisticas" class="btn btn-secondary">
+                    <span>📊</span> Ver Estadísticas
+                </a>
+            </div>
+
+            <form action="/buscar" method="GET" class="search-form">
+                <input 
+                    type="text" 
+                    name="termino" 
+                    class="search-input" 
+                    placeholder="Buscar animales por nombre, científico o descripción..."
+                    value="<%= locals.termino || '' %>"
+                >
+                <button type="submit" class="search-btn">🔍 Buscar</button>
+            </form>
+        </div>
+
+        <div class="stats-bar">
+            <h3>📈 Resumen de la Biblioteca</h3>
+            <p>Total de animales registrados: <strong><%= animales.length %></strong></p>
+        </div>
+
+        <% if (animales.length > 0) { %>
+            <div class="animals-grid">
+                <% animales.forEach(animal => { %>
+                    <div class="animal-card" onclick="window.location.href='/animales/<%= animal.ID %>'">
+                        <div class="animal-image">
+                            <% if (animal.Imagen) { %>
+                                <img src="/images/animales/<%= animal.Imagen %>" alt="<%= animal.Nombre %>">
+                            <% } else { %>
+                                <span>🐾</span>
+                            <% } %>
+                        </div>
+                        
+                        <div class="animal-content">
+                            <div class="animal-name"><%= animal.Nombre %></div>
+                            <div class="animal-scientific"><%= animal.NombreCientifico %></div>
+                            
+                            <div class="animal-details">
+                                <span class="animal-classification"><%= animal.Clasificacion %></span>
+                                <span class="animal-diet"><%= animal.Alimentacion %></span>
+                            </div>
+                            
+                            <div class="animal-description">
+                                <%= animal.Descripcion || 'Sin descripción disponible.' %>
+                            </div>
+                            
+                            <div class="animal-actions">
+                                <a href="/animales/<%= animal.ID %>" class="btn-small btn-view">👁️ Ver</a>
+                                <a href="/animales/editar/<%= animal.ID %>" class="btn-small btn-edit">✏️ Editar</a>
+                                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar a <%= animal.Nombre %>?')">
+                                    <button type="submit" class="btn-small btn-delete">🗑️ Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <h2>📝 No hay animales registrados</h2>
+                <p>Comienza agregando el primer animal a tu biblioteca</p>
+                <a href="/animales/nuevo" class="btn btn-primary" style="margin-top: 20px;">
+                    <span>➕</span> Agregar Primer Animal
+                </a>
+            </div>
+        <% } %>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.animal-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>
