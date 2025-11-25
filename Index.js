@@ -5,7 +5,7 @@ const app = express ();
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: path.join(__dirname, 'public/images/animales'), // Ruta basada en tu imagen
+    destination: path.join(__dirname, 'public/images/animales'),
     filename: (req, file, cb) => {
         // Guardamos con nombre único: fecha + nombre original
         cb(null, Date.now() + '-' + file.originalname);
