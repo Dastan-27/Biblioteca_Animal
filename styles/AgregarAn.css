@@ -1,69 +1,159 @@
+/* Heredamos las variables de Home.css, así que no necesitamos redefinirlas */
+
+/* Ajuste para el título específico de esta página */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 10px;
+}
+
+.header-actions h1 {
+    font-size: 2.5rem;
+    color: white; /* Texto blanco porque está sobre el fondo de montañas */
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    font-weight: 700;
+}
+
+/* --- Contenedor del Formulario (Efecto Vidrio) --- */
 .form-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-width: 800px;
-    margin: 0 auto;
+    /* Usamos la variable de fondo de tarjeta definida en Home.css */
+    background: var(--card-bg, rgba(255, 255, 255, 0.85));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--glass-border, 1px solid rgba(255, 255, 255, 0.3));
+    
+    padding: 2.5rem;
+    border-radius: var(--border-radius-lg, 16px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    max-width: 900px;
+    margin: 0 auto 40px auto;
+    color: var(--text-dark, #333);
 }
 
 .form-group {
     margin-bottom: 1.5rem;
 }
 
+/* Grid para dos columnas */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 }
 
+/* --- Etiquetas (Labels) --- */
 label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--dark-blue, #012a4a); /* Azul oscuro para contraste */
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
 }
 
+/* --- Inputs, Selects y Textareas --- */
 input[type="text"],
 input[type="number"],
 select,
-textarea {
+textarea,
+input[type="file"] {
     width: 100%;
-    padding: 0.8rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    padding: 12px 16px;
+    
+    /* Fondo casi blanco para asegurar legibilidad */
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: var(--border-radius-sm, 8px);
+    
+    font-family: 'Montserrat', sans-serif; /* Asegurar fuente */
     font-size: 1rem;
-    transition: border-color 0.3s;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
+/* Estado Focus (al escribir) */
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: #4CAF50;
     outline: none;
+    border-color: var(--primary-color, #2c7da0);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(44, 125, 160, 0.15);
+    transform: translateY(-1px);
 }
 
+/* Estilo para el input de archivo */
+input[type="file"] {
+    padding: 10px;
+    background: white;
+}
+
+/* Texto pequeño de ayuda */
+small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* --- Inputs de Rango (Min/Max vida) --- */
+.form-group div[style*="display: flex"] {
+    gap: 15px !important; /* Forzar un espacio más limpio */
+}
+
+/* --- Botón de Guardar --- */
 .btn-submit {
     width: 100%;
-    padding: 1rem;
-    background-color: #4CAF50;
+    padding: 16px;
+    margin-top: 10px;
+    
+    background-color: var(--success-color, #2a9d8f);
     color: white;
+    
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm, 8px);
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(42, 157, 143, 0.2);
 }
 
 .btn-submit:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
+    background-color: #21867a; /* Un tono un poco más oscuro manual */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(42, 157, 143, 0.3);
 }
 
-.header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+/* --- Ajustes Responsive --- */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        gap: 0;
+    }
+    
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .header-actions h1 {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
