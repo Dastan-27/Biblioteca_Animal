@@ -22,16 +22,18 @@ app.use('/styles', express.static('styles'));
 
 // Página principal - Lista de animales
 app.get("/", (req, res) => {
-    const sql = `
-        SELECT 
-            a.ID, a.Nombre, a.NombreCientifico, a.Descripcion,
-            c.Subtipo as Clasificacion,
-            ta.Tipo as Alimentacion
-        FROM Animales a
-        JOIN Clasificaciones c ON a.Clasificacion_ID = c.ID
-        JOIN TiposAlimentacion ta ON a.Alimentacion_ID = ta.ID
-        ORDER BY a.Nombre
-    `;
+const sql = `
+    SELECT 
+        a.ID, a.Nombre, a.NombreCientifico, a.Descripcion,
+        c.Subtipo as Clasificacion,
+        ta.Tipo as Alimentacion,
+        img.URLImagen as Imagen  /* Traemos la imagen de la otra tabla */
+    FROM Animales a
+    JOIN Clasificaciones c ON a.Clasificacion_ID = c.ID
+    JOIN TiposAlimentacion ta ON a.Alimentacion_ID = ta.ID
+    LEFT JOIN imagenesanimales img ON a.ID = img.Animal_ID AND img.EsPrincipal = 1
+    ORDER BY a.Nombre
+`;
     
     conexion.query(sql, (err, resultados) => {
         if (err) {
@@ -85,7 +87,8 @@ app.get("/animales/:id", (req, res) => {
             sh.Subtipo AS SubtipoHabitat,
             cl.Clima,
             ta.Tipo AS TipoAlimentacion,
-            tr.Tipo AS TipoReproduccion
+            tr.Tipo AS TipoReproduccion,
+            img.URLImagen as Imagen  /* <--- AGREGAMOS ESTO */
         FROM Animales a
         JOIN Clasificaciones c ON a.Clasificacion_ID = c.ID
         JOIN SubtiposHabitat sh ON a.Habitat_ID = sh.ID
@@ -93,6 +96,8 @@ app.get("/animales/:id", (req, res) => {
         JOIN Climas cl ON a.Clima_ID = cl.ID
         JOIN TiposAlimentacion ta ON a.Alimentacion_ID = ta.ID
         JOIN TiposReproduccion tr ON a.Reproduccion_ID = tr.ID
+        /* AGREGAMOS EL LEFT JOIN PARA LA FOTO */
+        LEFT JOIN imagenesanimales img ON a.ID = img.Animal_ID AND img.EsPrincipal = 1
         WHERE a.ID = ?
     `;
     
@@ -427,8 +432,8 @@ app.post("/animales/editar/:id", upload.single('imagen'), (req, res) => {
 });
 
 // También necesitarás el POST para crear nuevos animales
-app.post("/animales/nuevo", upload.single('imagen'),(req, res) => {
-    const nombreImagen = req.file? req.file.filename: null;
+app.post("/animales/nuevo", upload.single('imagen'), (req, res) => {
+    // 1. Recogemos los datos del formulario
     const {
         nombre,
         nombreCientifico,
@@ -442,17 +447,17 @@ app.post("/animales/nuevo", upload.single('imagen'),(req, res) => {
         descripcion
     } = req.body;
     
-    const imagenURL = req.file ? '/images/animales/' + req.file.filename : null;
-    
-    const sql = `
+    // 2. Query para la tabla ANIMALES (¡Nota que quitamos la columna Imagen de aquí!)
+    const sqlAnimal = `
         INSERT INTO Animales (
             Nombre, NombreCientifico, Clasificacion_ID, 
             TiempoVidaMin, TiempoVidaMax, Habitat_ID, 
-            Clima_ID, Alimentacion_ID, Reproduccion_ID, Descripcion, 
-            Imagen  
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            Clima_ID, Alimentacion_ID, Reproduccion_ID, Descripcion
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-const valores = [
+    
+    // Convertimos vacíos a null para evitar errores
+    const valoresAnimal = [
         nombre,
         nombreCientifico,
         clasificacion_id,
@@ -462,19 +467,41 @@ const valores = [
         clima_id,
         alimentacion_id,
         reproduccion_id,
-        descripcion,
-        nombreImagen // Guardamos el nombre del archivo en la BD
+        descripcion
     ];
-    
-    conexion.query(sql, valores, (err, resultado) => {
+
+    // PASO 1: Insertar el Animal
+    conexion.query(sqlAnimal, valoresAnimal, (err, resultado) => {
         if (err) {
-            console.error('Error al crear animal:', err);
-            return res.status(500).send('Error del servidor');
+            console.error('Error al insertar animal:', err);
+            return res.status(500).send('Error al guardar el animal: ' + err.sqlMessage);
         }
         
-        res.redirect(`/animales/${resultado.insertId}`);
+        const nuevoIdAnimal = resultado.insertId; // Aquí obtenemos el ID recién creado (ej: 15)
+
+        // Si el usuario subió una imagen, hacemos el PASO 2
+        if (req.file) {
+            const nombreImagen = req.file.filename;
+            
+            // 3. Query para la tabla IMAGENESANIMALES (Usamos los nombres de tu captura)
+            const sqlImagen = `
+                INSERT INTO imagenesanimales (Animal_ID, URLImagen, EsPrincipal) 
+                VALUES (?, ?, 1)
+            `;
+            
+            // PASO 2: Insertar la imagen vinculada al ID del animal
+            conexion.query(sqlImagen, [nuevoIdAnimal, nombreImagen], (errImg) => {
+                if (errImg) {
+                    console.error('Animal guardado, pero falló la imagen:', errImg);
+                    // No detenemos el proceso, redirigimos igual
+                }
+                res.redirect(`/animales/${nuevoIdAnimal}`);
+            });
+        } else {
+            // Si no hubo imagen, simplemente redirigimos
+            res.redirect(`/animales/${nuevoIdAnimal}`);
+        }
     });
 });
-
 const PORT= 3000;
 app.listen(PORT, () => console.log(`Corriendo en http://localhost:${PORT}`));
