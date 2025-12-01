@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca Animal</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/styles/Home.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -20,21 +21,7 @@
                 <a href="/animales/nuevo" class="btn btn-primary">
                     <span>➕</span> Agregar Nuevo Animal
                 </a>
-                <a href="/estadisticas" class="btn btn-secondary">
-                    <span>📊</span> Ver Estadísticas
-                </a>
             </div>
-
-            <form action="/buscar" method="GET" class="search-form">
-                <input 
-                    type="text" 
-                    name="termino" 
-                    class="search-input" 
-                    placeholder="Buscar animales por nombre, científico o descripción..."
-                    value="<%= locals.termino || '' %>"
-                >
-                <button type="submit" class="search-btn">🔍 Buscar</button>
-            </form>
         </div>
 
         <div class="stats-bar">
@@ -69,9 +56,12 @@
                             
                             <div class="animal-actions">
                                 <a href="/animales/<%= animal.ID %>" class="btn-small btn-view">👁️ Ver</a>
-                                <a href="/animales/editar/<%= animal.ID %>" class="btn-small btn-edit">✏️ Editar</a>
-                                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar a <%= animal.Nombre %>?')">
-                                    <button type="submit" class="btn-small btn-delete">🗑️ Eliminar</button>
+                                <a href="/animales/editar/<%= animal.ID %>" class="btn-small btn-edit" onclick="event.stopPropagation()">✏️ Editar</a>
+                                
+                                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" class="form-delete" onclick="event.stopPropagation()">
+                                    <button type="button" class="btn-small btn-delete" onclick="confirmarEliminacion(event, this.form)">
+                                        🗑️ Eliminar
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -98,5 +88,27 @@
             });
         });
     </script>
+
+    <script>
+    function confirmarEliminacion(event, form) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
 </body>
 </html>

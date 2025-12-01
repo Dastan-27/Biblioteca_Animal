@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= animal.Nombre %> - Biblioteca Animal</title>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/Home.css">
     <link rel="stylesheet" href="/styles/detalle-animal.css">
@@ -18,8 +18,10 @@
             </a>
             <div class="admin-actions">
                 <a href="/animales/editar/<%= animal.ID %>" class="btn btn-edit">✏️ Editar</a>
-                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a <%= animal.Nombre %>? Esta acción no se puede deshacer.')">
-                    <button type="submit" class="btn btn-delete">🗑️ Eliminar</button>
+                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" onclick="event.stopPropagation()">
+                        <button type="button" class="btn-small btn-delete" onclick="confirmarEliminacion(event, this.form)">
+                        🗑️ Eliminar
+                         </button>
                 </form>
             </div>
         </div>
@@ -96,5 +98,26 @@
             </div>
         </div>
     </div>
+        <script>
+    function confirmarEliminacion(event, form) {
+        event.preventDefault(); // 1. Evita el envío automático
+        event.stopPropagation(); // 2. Evita que se abra el detalle del animal (el clic de la tarjeta)
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // 3. Si dice sí, enviamos el formulario manualmente
+            }
+        });
+    }
+</script>
 </body>
 </html>
