@@ -12,19 +12,22 @@
 
 <body>
     <div class="container fade-in">
+
+        <!-- 🔥 TOP NAV FINAL Y CORRECTO -->
         <div class="top-nav">
-            <a href="/" class="btn-back">
+            <a href="/animales" class="btn-back">
                 <span>⬅️</span> Volver al Listado
             </a>
-            <div class="admin-actions">
-                <a href="/animales/editar/<%= animal.ID %>" class="btn btn-edit">✏️ Editar</a>
-                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" onclick="event.stopPropagation()">
-                        <button type="button" class="btn-small btn-delete" onclick="confirmarEliminacion(event, this.form)">
-                        🗑️ Eliminar
-                         </button>
-                </form>
-            </div>
+
+           <div class="admin-actions">
+    <a href="/animales/editar/<%= animal.ID %>" class="btn-edit">✏️ Editar</a>
+    
+    <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" class="form-eliminar">
+        <button type="submit" class="btn-delete" style="cursor: pointer; border: none; font-size: inherit;">🗑️ Eliminar</button>
+    </form>
+</div>
         </div>
+        <!-- 🔥 FIN TOP NAV -->
 
         <div class="detail-card">
             
@@ -40,7 +43,10 @@
                 </div>
                 
                 <div class="title-section">
-                    <span class="classification-badge"><%= animal.TipoClasificacion %> › <%= animal.SubtipoClasificacion %></span>
+                    <span class="classification-badge">
+                        <%= animal.TipoClasificacion %> › <%= animal.SubtipoClasificacion %>
+                    </span>
+
                     <h1><%= animal.Nombre %></h1>
                     <h2 class="scientific-name"><%= animal.NombreCientifico %></h2>
                     
@@ -55,11 +61,13 @@
 
             <div class="detail-body">
                 
+                <!-- DESCRIPCIÓN -->
                 <div class="description-section">
                     <h3>📖 Descripción</h3>
                     <p><%= animal.Descripcion ? animal.Descripcion : 'No hay descripción disponible para este animal.' %></p>
                 </div>
 
+                <!-- DATOS DE HÁBITAT -->
                 <div class="info-grid-section">
                     <h3>🌍 Datos del Hábitat</h3>
                     
@@ -72,7 +80,7 @@
                     </div>
 
                     <div class="info-card">
-                        <div class="icon">c</div>
+                        <div class="icon">🌡️</div>
                         <div class="data">
                             <label>Clima Preferido</label>
                             <span><%= animal.Clima %></span>
@@ -94,28 +102,34 @@
                             </span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <script>
-    function confirmarEliminacion(event, form) {
-        event.preventDefault(); // 1. Evita el envío automático
-        event.stopPropagation(); // 2. Evita que se abra el detalle del animal (el clic de la tarjeta)
 
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "No podrás revertir esta acción.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit(); // 3. Si dice sí, enviamos el formulario manualmente
-            }
+                </div> <!-- fin info-grid -->
+            </div> <!-- fin detail-body -->
+
+        </div> <!-- fin detail-card -->
+
+    </div> <!-- fin container -->
+    <script>
+    const formEliminar = document.querySelector('.form-eliminar');
+
+    if(formEliminar) {
+        formEliminar.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡El animal será eliminado permanentemente!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, borrar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
         });
     }
 </script>

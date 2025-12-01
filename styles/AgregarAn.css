@@ -1,4 +1,3 @@
-/* Ajuste para el título específico de esta página */
 .header-actions {
     display: flex;
     justify-content: space-between;
@@ -9,14 +8,12 @@
 
 .header-actions h1 {
     font-size: 2.5rem;
-    color: white; /* Texto blanco porque está sobre el fondo de montañas */
+    color: white;
     text-shadow: 0 4px 8px rgba(0,0,0,0.3);
     font-weight: 700;
 }
 
-/* --- Contenedor del Formulario (Efecto Vidrio) --- */
 .form-container {
-    /* Usamos la variable de fondo de tarjeta definida en Home.css */
     background: var(--card-bg, rgba(255, 255, 255, 0.85));
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -34,24 +31,21 @@
     margin-bottom: 1.5rem;
 }
 
-/* Grid para dos columnas */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 }
 
-/* --- Etiquetas (Labels) --- */
 label {
     display: block;
     margin-bottom: 0.6rem;
     font-weight: 600;
-    color: var(--dark-blue, #012a4a); /* Azul oscuro para contraste */
+    color: var(--dark-blue, #012a4a);
     font-size: 0.95rem;
     letter-spacing: 0.5px;
 }
 
-/* --- Inputs, Selects y Textareas --- */
 input[type="text"],
 input[type="number"],
 select,
@@ -59,20 +53,17 @@ textarea,
 input[type="file"] {
     width: 100%;
     padding: 12px 16px;
-    
-    /* Fondo casi blanco para asegurar legibilidad */
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: var(--border-radius-sm, 8px);
     
-    font-family: 'Montserrat', sans-serif; /* Asegurar fuente */
+    font-family: 'Montserrat', sans-serif; 
     font-size: 1rem;
     color: #333;
     transition: all 0.3s ease;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
-/* Estado Focus (al escribir) */
 input:focus,
 select:focus,
 textarea:focus {
@@ -83,13 +74,11 @@ textarea:focus {
     transform: translateY(-1px);
 }
 
-/* Estilo para el input de archivo */
 input[type="file"] {
     padding: 10px;
     background: white;
 }
 
-/* Texto pequeño de ayuda */
 small {
     display: block;
     margin-top: 5px;
@@ -97,11 +86,9 @@ small {
     font-size: 0.85rem;
 }
 
-/* --- Inputs de Rango (Min/Max vida) --- */
 .form-group div[style*="display: flex"] {
-    gap: 15px !important; /* Forzar un espacio más limpio */
+    gap: 15px !important;
 }
-
 /* --- Botón de Guardar --- */
 .btn-submit {
     width: 100%;
@@ -124,7 +111,7 @@ small {
 }
 
 .btn-submit:hover {
-    background-color: #21867a; /* Un tono un poco más oscuro manual */
+    background-color: #21867a; 
     transform: translateY(-3px);
     box-shadow: 0 8px 15px rgba(42, 157, 143, 0.3);
 }
@@ -132,7 +119,7 @@ small {
 /* --- Ajustes Responsive --- */
 @media (max-width: 768px) {
     .form-row {
-        grid-template-columns: 1fr; /* Una columna en móviles */
+        grid-template-columns: 1fr; 
         gap: 0;
     }
     

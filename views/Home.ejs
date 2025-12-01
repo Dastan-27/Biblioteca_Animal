@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca Animal</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/styles/Home.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -32,38 +32,38 @@
         <% if (animales.length > 0) { %>
             <div class="animals-grid">
                 <% animales.forEach(animal => { %>
-                    <div class="animal-card" onclick="window.location.href='/animales/<%= animal.ID %>'">
-                        <div class="animal-image">
-                            <% if (animal.Imagen) { %>
-                                <img src="/images/animales/<%= animal.Imagen %>" alt="<%= animal.Nombre %>">
-                            <% } else { %>
-                                <span>🐾</span>
-                            <% } %>
+                    <div class="animal-card">
+                        <div class="animal-card-content" onclick="window.location.href='/animales/<%= animal.ID %>'">
+                            <div class="animal-image">
+                                <% if (animal.Imagen) { %>
+                                    <img src="/images/animales/<%= animal.Imagen %>" alt="<%= animal.Nombre %>">
+                                <% } else { %>
+                                    <span>🐾</span>
+                                <% } %>
+                            </div>
+                            
+                            <div class="animal-content">
+                                <div class="animal-name"><%= animal.Nombre %></div>
+                                <div class="animal-scientific"><%= animal.NombreCientifico %></div>
+                                
+                                <div class="animal-details">
+                                    <span class="animal-classification"><%= animal.Clasificacion %></span>
+                                    <span class="animal-diet"><%= animal.Alimentacion %></span>
+                                </div>
+                                
+                                <div class="animal-description">
+                                    <%= animal.Descripcion || 'Sin descripción disponible.' %>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="animal-content">
-                            <div class="animal-name"><%= animal.Nombre %></div>
-                            <div class="animal-scientific"><%= animal.NombreCientifico %></div>
-                            
-                            <div class="animal-details">
-                                <span class="animal-classification"><%= animal.Clasificacion %></span>
-                                <span class="animal-diet"><%= animal.Alimentacion %></span>
-                            </div>
-                            
-                            <div class="animal-description">
-                                <%= animal.Descripcion || 'Sin descripción disponible.' %>
-                            </div>
-                            
-                            <div class="animal-actions">
-                                <a href="/animales/<%= animal.ID %>" class="btn-small btn-view">👁️ Ver</a>
-                                <a href="/animales/editar/<%= animal.ID %>" class="btn-small btn-edit" onclick="event.stopPropagation()">✏️ Editar</a>
-                                
-                                <form action="/animales/eliminar/<%= animal.ID %>" method="POST" class="form-delete" onclick="event.stopPropagation()">
-                                    <button type="button" class="btn-small btn-delete" onclick="confirmarEliminacion(event, this.form)">
-                                        🗑️ Eliminar
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="animal-actions">
+                            <a href="/animales/<%= animal.ID %>" class="btn-small btn-view">👁️ Ver</a>
+                            <a href="/animales/editar/<%= animal.ID %>" class="btn-small btn-edit">✏️ Editar</a>
+
+                            <form action="/animales/eliminar/<%= animal.ID %>" method="POST" style="display: inline;" class="form-eliminar">
+                                <button type="submit" class="btn-small btn-delete">🗑️ Eliminar</button>
+                            </form>
                         </div>
                     </div>
                 <% }); %>
@@ -80,35 +80,45 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.animal-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('fade-in');
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.animal-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+    });
+
+    const formsEliminar = document.querySelectorAll('.form-eliminar');
+    formsEliminar.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Detener el envío automático
+            e.stopPropagation(); // Evitar que el evento se propague
+            
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                background: '#fff',  
+                color: '#333'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
             });
         });
-    </script>
-
-    <script>
-    function confirmarEliminacion(event, form) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "No podrás revertir esta acción.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
+    });
+    
+    document.querySelectorAll('.animal-actions a, .animal-actions button, .animal-actions form').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
-    }
+    });
 </script>
+    
 </body>
 </html>

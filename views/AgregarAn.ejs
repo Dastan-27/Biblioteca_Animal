@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Nuevo Animal - Biblioteca Animal</title>
+
     <link rel="stylesheet" href="/styles/Home.css">
-    <link rel="stylesheet" href="/styles/AgregarAn.css">
+   <link rel="stylesheet" href="/styles/AgregarAn.css">
 </head>
 
 <body>
@@ -26,7 +27,8 @@
 
                     <div class="form-group">
                         <label for="nombreCientifico">Nombre Científico *</label>
-                        <input type="text" id="nombreCientifico" name="nombreCientifico" placeholder="Ej. Panthera leo" required style="font-style: italic;">
+                        <input type="text" id="nombreCientifico" name="nombreCientifico"
+                               placeholder="Ej. Panthera leo" required style="font-style: italic;">
                     </div>
                 </div>
 
@@ -54,9 +56,8 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="clima">Clima Preferido *</label>
+                        <label for="clima">Clima Preferido</label>
                         <select id="clima" name="clima_id" required>
-                            <option value="">Seleccione un clima...</option>
                             <% climas.forEach(c => { %>
                                 <option value="<%= c.ID %>"><%= c.Clima %></option>
                             <% }); %>
@@ -64,9 +65,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="alimentacion">Tipo de Alimentación *</label>
+                        <label for="alimentacion">Tipo de Alimentación</label>
                         <select id="alimentacion" name="alimentacion_id" required>
-                            <option value="">Seleccione alimentación...</option>
                             <% alimentaciones.forEach(a => { %>
                                 <option value="<%= a.ID %>"><%= a.Tipo %></option>
                             <% }); %>
@@ -76,9 +76,8 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="reproduccion">Tipo de Reproducción *</label>
+                        <label for="reproduccion">Tipo de Reproducción</label>
                         <select id="reproduccion" name="reproduccion_id" required>
-                            <option value="">Seleccione reproducción...</option>
                             <% reproducciones.forEach(r => { %>
                                 <option value="<%= r.ID %>"><%= r.Tipo %></option>
                             <% }); %>
@@ -96,7 +95,8 @@
 
                 <div class="form-group">
                     <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe las características principales del animal..."></textarea>
+                    <textarea id="descripcion" name="descripcion" rows="4"
+                              placeholder="Describe las características principales del animal..."></textarea>
                 </div>
 
                 <div class="form-group">
